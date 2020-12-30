@@ -42,6 +42,38 @@
         
         <script src="_js/jquery.js"></script>
         <script>
+            $('#cep').blur(function(e) {
+                var cep=$('#cep').val();
+                //console.log(cep);
+                var url="http://viacep.com.br/ws/" + cep + "/json/";
+                //console.log(url);
+
+                var validacep = /^[0-9]{5}-?[0-9]{3}$/;
+
+                if(validacep.test(cep)) {
+                    $('#mensagem').hide();
+                    pesquisarCEP(url);
+                } else { 
+                    $('#mensagem').show();
+                    $('#mensagem p').html("CEP inválido <br>Digite o CEP corretamente 00000-00");
+                }
+            });
+
+            function pesquisarCEP(endereco) {
+                $.ajax({
+                    type: "GET",
+                    url: endereco,
+                    async: false
+                }).done(function(data){
+                    // console.log(data);
+                    $('#bairro').val(data.bairro);
+                    $('#endereco').val(data.logradouro);
+                    $('#cidade').val(data.localidade);
+                    $('#estado').val(data.uf);
+                }).fail(function(){
+                    console.log("erro");
+                });
+            }
         </script>
     </body>
 </html>
